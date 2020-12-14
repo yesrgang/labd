@@ -172,7 +172,7 @@ class GPIBInstrumentProxy(object):
         return int.from_bytes(r, 'big')
 
 # Synchronous server stuff --------------------------------------------------- #
-import visa
+import pyvisa as visa
 import json
 
 rm = visa.ResourceManager()
