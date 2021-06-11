@@ -17,6 +17,10 @@ class VisaProxy(object):
     def __del__(self):
         r = _comm(f'STOP {self._libhost[1]}'.encode(), self._inithost)
 
+    def _echo(self, message):
+        r = _comm(f'_echo {message}'.encode(), self._libhost)
+        return r.decode()
+
     def ResourceManager(self):
         return ResourceManagerProxy(self._libhost)
 
@@ -142,8 +146,10 @@ def handle_request(conn):
     global inst
     data = conn.recv(1024)
     action, _, args = data.partition(b" ")
-
-    if action == b"list_resources":
+    
+    if action == b"_echo":
+        conn.send(args)
+    elif action == b"list_resources":
         query = args.decode()
         resources = rm.list_resources(query)
         conn.send(str(resources).encode())
