@@ -129,6 +129,9 @@ class SerialSerialProxy(object):
                   'inter_byte_timeout': inter_byte_timeout}
         
         r = _comm(f'Serial {kwargs}'.encode(), self._host)
+    
+    def __del__(self):
+        self.close()
 
     @property
     def baudrate(self):
@@ -159,6 +162,10 @@ class SerialSerialProxy(object):
         Type: int
         """
         r = _comm(f'Serial.bytesize_setattr {bytesize}'.encode(), self._host)
+
+    def close(self):
+        """ Close port """
+        r = _comm(f'Serial.close'.encode(), self._host)
         
     @property
     def dsrdtr(self):
@@ -304,6 +311,12 @@ def handle_request(conn):
     elif action == b'Serial.bytesize_setattr':
         bytesize = int(args)
         ser.bytesize = bytesize
+        conn.send(b'')
+    elif action == b'Serial.close':
+        try:
+            ser.close()
+        except:
+            pass
         conn.send(b'')
     elif action == b'Serial.dsrdtr_getattr':
         dsrdtr = ser.dsrdtr
