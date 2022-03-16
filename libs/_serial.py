@@ -281,6 +281,7 @@ class SerialSerialProxy(object):
         return int.from_bytes(r, 'big')
 
 def handle_request(conn):
+    global ser
     data = conn.recv(1024)
     action, _, args = data.partition(b" ")
 
@@ -362,7 +363,8 @@ if __name__ == "__main__":
     import serial 
     import sys
 
-    global ser
+    ser = None
+
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     if len(sys.argv) == 2:
