@@ -70,7 +70,7 @@ class SerialProxy(object):
         function serial_for_url() instead of creating Serial instances 
         directly.
         """
-        return SerialSerialProxy(self._host, port, baudrate, bytesize, parity, 
+        return SerialSerialProxy(self._libhost, port, baudrate, bytesize, parity, 
                                stopbits, timeout, xonxoff, rtscts, 
                                write_timeout, dsrdtr, inter_byte_timeout)
 
@@ -120,25 +120,6 @@ class SerialSerialProxy(object):
         directly.
         """
         self._host = host
-#        self._host = host
-#        self._port = port
-#        self._baudrate = baudrate
-#        self._bytesize = bytesize
-#        self._parity = parity
-#        self._stopbits = stopbits
-#        self._timeout = timeout
-#        self._xonxoff = xonxoff
-#        self._rtscts = rtscts
-#        self._write_timeout = write_timeout
-#        self._dsrdtr = dsrdtr
-#        self._inter_byte_timeout = inter_byte_timeout
-#        
-#        kwargs = {'port': self._port, 'baudrate': self._baudrate, 
-#                  'bytesize': self._bytesize, 'parity': self._parity, 
-#                  'stopbits': self._stopbits, 'timeout': self._timeout,
-#                  'xonxoff': self._xonxoff, 'rtscts': self._rtscts, 
-#                  'write_timeout': self._write_timeout, 'dsrdtr': self._dsrdtr,
-#                  'inter_byte_timeout': self._inter_byte_timeout}
 
         kwargs = {'port': port, 'baudrate': baudrate, 
                   'bytesize': bytesize, 'parity': parity, 
@@ -147,7 +128,7 @@ class SerialSerialProxy(object):
                   'write_timeout': write_timeout, 'dsrdtr': dsrdtr,
                   'inter_byte_timeout': inter_byte_timeout}
         
-        r = _comm(f'Serial {json.dumps(kwargs)}'.encode(), self._host)
+        r = _comm(f'Serial {kwargs}'.encode(), self._host)
 
     @property
     def baudrate(self):
@@ -306,7 +287,7 @@ def handle_request(conn):
     if action == b'_echo':
         conn.send(args)
     elif action == b'Serial':
-        kwargs = json.loads(args.decode())
+        kwargs = eval(args)
         ser = serial.Serial(**kwargs)
         conn.send(b'')
     elif action == b'Serial.baudrate_getattr':
