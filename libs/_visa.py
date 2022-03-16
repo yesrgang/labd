@@ -210,7 +210,6 @@ if __name__ == "__main__":
         s.bind(("0.0.0.0", 65050))
         s.listen(1)
 
-
     while True:
         conn, addr = s.accept()
         handle_request(conn)
