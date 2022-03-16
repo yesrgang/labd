@@ -27,8 +27,8 @@ class SerialProxy(object):
         r = _comm(f'_echo {message}'.encode(), self._libhost)
         return r.decode()
 
-    def Serial(self, port=None, baudrate=9600, bytesize=SerialProxy.EIGHTBITS, 
-               parity=SerialProxy.PARITY_NONE, stopbits=SerialProxy.STOPBITS_ONE, 
+    def Serial(self, port=None, baudrate=9600, bytesize=EIGHTBITS, 
+               parity=PARITY_NONE, stopbits=STOPBITS_ONE, 
                timeout=None, xonxoff=False, rtscts=False, write_timeout=None, 
                dsrdtr=False, inter_byte_timeout=None):
         """ The port is immediately opened on object creation, 
